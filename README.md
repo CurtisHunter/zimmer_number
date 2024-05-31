@@ -1,2 +1,1 @@
-["# zimmer_number" 
-](https://zimmernumber.streamlit.app/)
+Please view [the live app here](https://zimmernumber.streamlit.app/)
