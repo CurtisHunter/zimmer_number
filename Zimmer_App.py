@@ -58,6 +58,9 @@ def plot_zimmer_path(G, center_node, radius=2, path=None): # plots the path from
 
     if path:
         path_edges = [(path[i], path[i+1]) for i in range(len(path)-1)]
+        nx.draw_networkx_nodes(neighbors, pos, nodelist=path, node_color="red", node_size=600)
+        nx.draw_networkx_edges(neighbors, pos, edgelist=path_edges, edge_color="red", width=2)
+        st.pyplot(plt)
         for u, v in path_edges:
             if neighbors.has_edge(u, v) and 'linking_id' in neighbors[u][v]:
                 linking_id = neighbors[u][v]['linking_id']
@@ -66,10 +69,8 @@ def plot_zimmer_path(G, center_node, radius=2, path=None): # plots the path from
             else:
                 st.write(f"{node_labels[u]} -- ?? --> {node_labels[v]}")
 
-        nx.draw_networkx_nodes(neighbors, pos, nodelist=path, node_color="red", node_size=600)
-        nx.draw_networkx_edges(neighbors, pos, edgelist=path_edges, edge_color="red", width=2)
 
-    st.pyplot(plt)
+
 
 
 # Filtering to only allow the user to select relevant composers (connected to Hans)
@@ -81,20 +82,50 @@ composername_lookup_filtered = composername_lookup[composername_lookup['composer
 
 st.title("The Zimmer Number")
 
-composer_name = st.selectbox("Search for a composer:", composername_lookup_filtered['composer_name'].tolist())
+st.markdown("""## Intro - The Concept
+
+Have you heard of the Bacon Number? If not If not, the concept is as follows: 
+
+- An actor who was in a movie with Kevin Bacon has a Bacon Number of 1. 
+- An actor who was in a movie with someone that has a Bacon Number of 1, has a Bacon Bumber of 2. 
+- An actor who was in a movie with someone that has a Bacon Number of 2, has a Bacon Bumber of 3.
+
+This continues indefinitely.
+""")
+
+st.image("images/photo2.jpg")
+
+st.write("")
+st.markdown("""
+Using data that I collected from the TMDB API, I have created **'the Bacon Number' but for composers who have worked with Hans Zimmer!**
+
+Due to computational limitations, this version of the app only considers **TV show connections**.
+""")
+
+st.image("images/photo1.jpg")
+
+st.write("")
+
+st.markdown("""### Example of a composer with a Zimmer Number of 3""")
+
+st.image("images/photo3.jpg", width = 200)
+
+st.markdown("""## Calculate the Zimmer Number""")
+
+composername_lookup_filtered_sorted = composername_lookup_filtered.sort_values(by='popularity', ascending=False)
+composer_names_sorted = composername_lookup_filtered_sorted['composer_name'].tolist()
+composer_name = st.selectbox("Search for a composer (sorted by popularity):", composer_names_sorted)
 
 if composer_name:
     composer_row = composername_lookup_filtered[composername_lookup_filtered['composer_name'].str.contains(composer_name, case=False, na=False)]
     if not composer_row.empty:
         composer_id = composer_row['composer_id'].values[0]
-        st.write(f"Composer TMDB ID: {composer_id}")
 
         target_id = 947 # hans' composer id
-        if st.button("Find Zimmer Number"):
+        if st.button("Find Link!"):
             path = zimmer_number_path(composer_id, target=target_id)
             if path:
-                st.write("Zimmer Number:", len(path))
-                st.write("Visualizing Zimmer Number Graph:")
+                st.markdown(f"""### Zimmer Number: {len(path) - 1}""")
                 st.write("")
                 plot_zimmer_path(G, composer_id, radius=2, path=path)
             else:
@@ -103,3 +134,11 @@ if composer_name:
         st.write("Composer not found.")
 else:
     st.write("Enter a composer name to search.")
+
+for i in range(15): # adding some spacing
+    st.write("")
+
+
+st.markdown("""
+## Acknowledgements
+""")
