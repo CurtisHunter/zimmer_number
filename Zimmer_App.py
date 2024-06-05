@@ -87,8 +87,8 @@ if page == "Intro":
     st.write("Have you heard of the Bacon Number? If not If not, the concept is as follows:")
 
     st.markdown("- An actor who was in a movie with Kevin Bacon has a Bacon Number of 1.")
-    st.markdown("- An actor who was in a movie with someone that has a Bacon Number of 1, has a Bacon Bumber of 2.")
-    st.markdown("- An actor who was in a movie with someone that has a Bacon Number of 2, has a Bacon Bumber of 3.")
+    st.markdown("- An actor who was in a movie with someone that has a Bacon Number of 1, has a Bacon Number of 2.")
+    st.markdown("- An actor who was in a movie with someone that has a Bacon Number of 2, has a Bacon Number of 3.")
 
     st.write("This continues indefinitely.")
 
